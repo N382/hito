@@ -7,55 +7,78 @@
   %section.roles
     %h2= title
 
-    %table.table-roles-aside
-      %tbody
-        - grouped_roles.each do |layer, roles|
-          -# A row for every layer as a header, if there are not directly roles with this specific layer
-          - unless roles.any? { |role| role.group.layer? }
-            %tr{class: 'is-layer is-new-row'}
-              %td{colspan: 3}
-                %strong= link_to(layer, layer)
-              %td
-                - if can?(:new, layer.roles.new)
-                  = action_button(t('.add_role'),
-                                    new_group_role_path(layer,
-                                                        role: { person_id: entry.id },
-                                                        return_url: group_person_path(layer.id, entry.id)),
-                                    :plus,
-                                    class: 'btn-small')
-                -# # -# make it possible so I can make a new role, even if I only have access to a subgroup
+    - grouped_roles.each do |layer, roles|
+      %div{style: "border-top: 1px solid #eee; margin-bottom: 1rem; padding-top: 0.5rem;"}
+        - if can?(:new, layer.roles.new)
+          .pull-right= action_button(t('.add_role'), new_group_role_path(layer,
+                                role: { person_id: entry.id },
+                                return_url: group_person_path(layer.id, entry.id)),
+                                :plus,
+                                class: 'btn-small')
+        %strong= link_to(layer, layer)
+        - entry.roles_grouped(roles).each do |group, roles|
+          %div{style: "padding"}
+            - if group.layer?
+              - roles.each_with_index do |role, index|
+                .chip{style: "background-color: #eee"}
+                  = link_to(role)
+                  = link_action_edit(edit_group_role_path(role.group, role)) if can?(:edit, role)
+                  = link_action_destroy(group_role_path(role.group, role)) if can?(:destroy, role)
+            - else
+              .chip{style: "background-color: #fff; border: 1px solid #eee;"}
+                %div{style: "padding-right: 0.5rem"}= link_to(group)
+                %div{style: "max-width: 100%;"}
+                  - roles.each_with_index do |role, index|
+                    .chip{style: "background-color: #eee;"}
+                      = link_to(role)
+                      = link_action_edit(edit_group_role_path(role.group, role)) if can?(:edit, role)
+                      = link_action_destroy(group_role_path(role.group, role)) if can?(:destroy, role)
+                      -# A row for every layer as a header, if there are not direct roles with this specific layer
+          -# - unless roles.any? { |role| role.group.layer? }
+          -#   %tr{class: 'is-layer is-new-row'}
+          -#     %td{colspan: 3}
+          -#       %strong= link_to(layer, layer)
+          -#     %td
+          -#       - if can?(:new, layer.roles.new)
+          -#         = action_button(t('.add_role'),
+          -#                           new_group_role_path(layer,
+          -#                                               role: { person_id: entry.id },
+          -#                                               return_url: group_person_path(layer.id, entry.id)),
+          -#                           :plus,
+          -#                           class: 'btn-small')
+          -#       -# # -# make it possible so I can make a new role, even if I only have access to a subgroup
 
-          -# a row for every role
-          - entry.roles_grouped(roles).each do |group, roles|
-            - roles.each_with_index do |role, index|
-              %tr{ class: "#{'is-layer' if role.group.layer?} #{'is-new-row' if index==0}" }
-                %td
-                  %div{class: ('offset2' unless role.group.layer?) }
-                    -# only show group title once per group
-                    %span{class: ('invisible' unless index == 0)} 
-                      - if can?(:primary_group, entry)
-                        = link_to(icon(entry.primary_group_id == group.id ? 'star' : 'star-empty'),
-                                  primary_group_group_person_path(@group, entry, primary_group_id: group.id),
-                                  title: t('.set_main_group'),
-                                  alt: t('.set_main_group'),
-                                  class: "group-#{group.id}",
-                                  data: {method: :put, remote: true})
-                      %span{class: ('strong' if role.group.layer? )}= link_to(role.group, role.group)
-                    %strong= role.to_s
-                %td= link_action_edit(edit_group_role_path(role.group, role)) if can?(:edit, role)
-                %td= link_action_destroy(group_role_path(role.group, role)) if can?(:destroy, role)
-                %td 
-                  - if role.group.layer? && index == 0
-                    = action_button(t('.add_role'),
-                                    new_group_role_path(layer,
-                                                        role: { person_id: entry.id },
-                                                        return_url: group_person_path(layer.id, entry.id)),
-                                    :plus,
-                                    class: 'btn-small')
-                  - elsif !can?(:new, layer.roles.new) && can?(:new, group.roles.new) #if you can't edit layer
-                    = action_button(t('.add_role'),
-                                    new_group_role_path(group,
-                                                        role: { person_id: entry.id },
-                                                        return_url: group_person_path(group.id, entry.id)),
-                                    :plus,
-                                    class: 'btn-small')
+          -# -# a row for every role
+          -# - entry.roles_grouped(roles).each do |group, roles|
+          -#   - roles.each_with_index do |role, index|
+          -#     %tr{ class: "#{'is-layer' if role.group.layer?} #{'is-new-row' if index==0}" }
+          -#       %td
+          -#         %div{class: ('offset2' unless role.group.layer?) }
+          -#           -# only show group title once per group
+          -#           %span{class: ('invisible' unless index == 0)} 
+          -#             - if can?(:primary_group, entry)
+          -#               = link_to(icon(entry.primary_group_id == group.id ? 'star' : 'star-o'),
+          -#                         primary_group_group_person_path(@group, entry, primary_group_id: group.id),
+          -#                         title: t('.set_main_group'),
+          -#                         alt: t('.set_main_group'),
+          -#                         class: "group-#{group.id}",
+          -#                         data: {method: :put, remote: true})
+          -#             %span{class: ('strong' if role.group.layer? )}= link_to(role.group, role.group)
+          -#           %strong= role.to_s
+          -#       %td= link_action_edit(edit_group_role_path(role.group, role)) if can?(:edit, role)
+          -#       %td= link_action_destroy(group_role_path(role.group, role)) if can?(:destroy, role)
+          -#       %td 
+          -#         - if role.group.layer? && index == 0
+          -#           = action_button(t('.add_role'),
+          -#                           new_group_role_path(layer,
+          -#                                               role: { person_id: entry.id },
+          -#                                               return_url: group_person_path(layer.id, entry.id)),
+          -#                           :plus,
+          -#                           class: 'btn-small')
+          -#         - elsif !can?(:new, layer.roles.new) && can?(:new, group.roles.new) #if you can't edit layer
+          -#           = action_button(t('.add_role'),
+          -#                           new_group_role_path(group,
+          -#                                               role: { person_id: entry.id },
+          -#                                               return_url: group_person_path(group.id, entry.id)),
+          -#                           :plus,
+          -#                           class: 'btn-small')
