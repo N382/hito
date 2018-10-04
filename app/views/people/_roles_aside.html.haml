@@ -10,7 +10,7 @@
     - grouped_roles.each do |layer, roles|
       %div{style: "border-top: 1px solid #eee; margin-bottom: 1rem; padding-top: 0.5rem;"}
         - if can?(:new, layer.roles.new)
-          .pull-right= action_button(t('.add_role'), new_group_role_path(layer,
+          .pull-right= action_button('', new_group_role_path(layer,
                                 role: { person_id: entry.id },
                                 return_url: group_person_path(layer.id, entry.id)),
                                 :plus,
@@ -20,19 +20,22 @@
           %div{style: "padding"}
             - if group.layer?
               - roles.each_with_index do |role, index|
-                .chip{style: "background-color: #eee"}
-                  = link_to(role)
-                  = link_action_edit(edit_group_role_path(role.group, role)) if can?(:edit, role)
-                  = link_action_destroy(group_role_path(role.group, role)) if can?(:destroy, role)
+                .div
+                  .chip
+                    = role
+                    = link_action_edit(edit_group_role_path(role.group, role)) if can?(:edit, role)
+                    = link_action_destroy(group_role_path(role.group, role)) if can?(:destroy, role)
             - else
-              .chip{style: "background-color: #fff; border: 1px solid #eee;"}
-                %div{style: "padding-right: 0.5rem"}= link_to(group)
-                %div{style: "max-width: 100%;"}
-                  - roles.each_with_index do |role, index|
-                    .chip{style: "background-color: #eee;"}
-                      = link_to(role)
+              -# %div{style: "padding-right: 0.5rem"}= link_to(group)
+              %div{style: "max-width: 100%;"}
+                - roles.each_with_index do |role, index|
+                  %div
+                    .chip
+                      = link_to(group)
+                      = role
                       = link_action_edit(edit_group_role_path(role.group, role)) if can?(:edit, role)
                       = link_action_destroy(group_role_path(role.group, role)) if can?(:destroy, role)
+
                       -# A row for every layer as a header, if there are not direct roles with this specific layer
           -# - unless roles.any? { |role| role.group.layer? }
           -#   %tr{class: 'is-layer is-new-row'}
