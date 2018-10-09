@@ -46,6 +46,8 @@ class MailingList < ActiveRecord::Base
   validates :description, length: { allow_nil: true, maximum: 2**16 - 1 }
   validate :assert_mail_name_is_not_protected
 
+  after_destroy :schedule_mailchimp_destroy, if: :mailchimp?
+
   DEFAULT_LABEL = '_main'.freeze
 
   def to_s(_format = :default)
@@ -54,6 +56,10 @@ class MailingList < ActiveRecord::Base
 
   def labels
     main_email ? preferred_labels + [DEFAULT_LABEL]: preferred_labels
+  end
+
+  def mailchimp?
+    [mailchimp_api_key, mailchimp_list_id].all?(&:present?)
   end
 
   def preferred_labels=(labels)
@@ -176,4 +182,11 @@ class MailingList < ActiveRecord::Base
     config = Settings.email.retriever.config
     config.presence && config.user_name.presence
   end
+
+  private
+
+  def schedule_mailchimp_destroy
+    MailchimpDestructionJob.new(mailchimp_list_id, mailchimp_api_key, people).enqueue!
+  end
+
 end
