@@ -67,7 +67,7 @@ module Import
 
     def populate_person(attributes, index)
       person = doublette_finder.find(attributes) || ::Person.new
-
+      attributes[:email] = person.email unless user_ability.can?(:update_email, person)
       import_person = Import::Person.new(person, attributes, options)
       import_person.populate
       import_person.add_role(group, role_type)
