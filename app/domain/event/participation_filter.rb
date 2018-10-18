@@ -7,7 +7,7 @@
 
 class Event::ParticipationFilter
 
-  PREDEFINED_FILTERS = %w(all teamers participants)
+  PREDEFINED_FILTERS = %w(all teamers participants).freeze
 
   class_attribute :load_entries_includes
   self.load_entries_includes = [:roles, :event,

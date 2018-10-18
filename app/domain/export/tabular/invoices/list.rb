@@ -10,7 +10,7 @@ module Export::Tabular::Invoices
 
     INCLUDED_ATTRS = %w(title sequence_number state esr_number description
                         recipient_email recipient_address sent_at due_at
-                        cost vat total amount_paid)
+                        cost vat total amount_paid).freeze
 
     self.model_class = Invoice
     self.row_class = Export::Tabular::Invoices::Row

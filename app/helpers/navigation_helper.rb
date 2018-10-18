@@ -37,7 +37,7 @@ module NavigationHelper
       icon_name: 'cog',
       active_for: %w(label_formats custom_contents event_kinds qualification_kinds),
       if: ->(_) { can?(:index, LabelFormat) } }
-  ]
+  ].freeze
 
 
   def render_main_nav

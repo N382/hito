@@ -40,7 +40,7 @@ module SearchStrategies
         attrs: ['events.name', 'events.number', 'groups.name'],
         joins: [:groups]
       }
-    }
+    }.freeze
 
     def list_people
       return Person.none.page(1) unless term_present?

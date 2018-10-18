@@ -16,7 +16,7 @@ module Subscriber
                         events.number
                         groups.name
                         event_kind_translations.label
-                        event_kind_translations.short_name)
+                        event_kind_translations.short_name).freeze
 
     # GET query queries available events via ajax
     def query

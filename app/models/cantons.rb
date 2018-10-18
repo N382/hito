@@ -10,7 +10,7 @@ module Cantons
   module_function
 
   SHORT_NAMES = [:ag, :ai, :ar, :be, :bl, :bs, :fr, :ge, :gl, :gr, :ju, :lu, :ne,
-                 :nw, :ow, :sg, :sh, :so, :sz, :tg, :ti, :ur, :vd, :vs, :zg, :zh]
+                 :nw, :ow, :sg, :sh, :so, :sz, :tg, :ti, :ur, :vd, :vs, :zg, :zh].freeze
 
   def short_names
     SHORT_NAMES

@@ -14,7 +14,7 @@ module MailRelay
   # based on the encoded return path address.
   class Lists < Base
 
-    SENDER_SUFFIX = '-bounces'
+    SENDER_SUFFIX = '-bounces'.freeze
 
     self.mail_domain = Settings.email.list_domain
 

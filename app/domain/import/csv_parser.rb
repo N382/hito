@@ -15,7 +15,7 @@ module Import
 
     def_delegators :csv, :size, :first, :to_csv, :[], :each
     attr_reader :csv, :error
-    POSSIBLE_SEPARATORS = [',', "\t", ':', ';']
+    POSSIBLE_SEPARATORS = [',', "\t", ':', ';'].freeze
 
     def initialize(input)
       @input = input

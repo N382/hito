@@ -14,15 +14,15 @@ module Role::Types
   Permissions = [:admin,
                  :layer_and_below_full, :layer_and_below_read, :layer_full, :layer_read,
                  :group_and_below_full, :group_and_below_read, :group_full, :group_read,
-                 :contact_data, :approve_applications, :finance, :impersonation]
+                 :contact_data, :approve_applications, :finance, :impersonation].freeze
 
   # If a role contains the first permission, the second one is automatically active as well
   PermissionImplications = { layer_and_below_full: :layer_and_below_read,
                              layer_full: :layer_read,
                              group_and_below_full: :group_and_below_read,
-                             group_full: :group_read }
+                             group_full: :group_read }.freeze
 
-  Kinds = [:member, :passive, :external]
+  Kinds = [:member, :passive, :external].freeze
 
   # rubocop:enable ConstantName
 

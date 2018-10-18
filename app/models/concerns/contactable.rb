@@ -17,7 +17,7 @@ module Contactable
                       social_accounts_attributes:
                         [:id, :name, :translated_label, :public, :_destroy],
                       additional_emails_attributes:
-                        [:id, :email, :translated_label, :public, :mailings, :_destroy]]
+                        [:id, :email, :translated_label, :public, :mailings, :_destroy]].freeze
 
   included do
     has_many :phone_numbers, as: :contactable, dependent: :destroy

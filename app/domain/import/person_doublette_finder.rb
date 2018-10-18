@@ -18,7 +18,7 @@ module Import
       :company_name,
       :zip_code,
       :birthday
-    ]
+    ].freeze
 
     def initialize
       @doublettes = {}
